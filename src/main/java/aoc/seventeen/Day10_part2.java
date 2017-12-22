@@ -13,13 +13,19 @@ public class Day10_part2 {
     private static final String LENGTHS = "192,69,168,160,78,1,166,28,0,83,198,2,254,255,41,12";
 
     public static void main(final String[] args) {
+        String input = LENGTHS;
         List<Integer> lengths = new ArrayList<>();
-        for (int i = 0; i < LENGTHS.length(); i++) {
-            lengths.add((int) LENGTHS.charAt(i));
+        for (int i = 0; i < input.length(); i++) {
+            lengths.add((int) input.charAt(i));
         }
-        lengths.addAll(Arrays.asList(17, 31, 73, 47, 23));
+        String hash = generateKnotHash(lengths);
 
-        System.out.println(lengths);
+        System.out.println(hash);
+
+    }
+
+    public static String generateKnotHash(final List<Integer> lengths) {
+        lengths.addAll(Arrays.asList(17, 31, 73, 47, 23));
         int[] values = IntStream.range(0, MAX).toArray();
 
         int startPos = 0;
@@ -51,11 +57,9 @@ public class Day10_part2 {
         }
 
         String hash = Arrays.stream(denseHash) //
-                        .mapToObj((final int input) -> String.format("%02x", input)) //
+                        .mapToObj((final int hashPart) -> String.format("%02x", hashPart)) //
                         .collect(Collectors.joining());
-
-        System.out.println(hash);
-
+        return hash;
     }
 
 }
