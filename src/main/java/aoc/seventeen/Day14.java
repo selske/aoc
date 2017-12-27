@@ -1,54 +1,11 @@
 package aoc.seventeen;
 
+import aoc.util.Coordinate;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Day14 {
-
-    private static final class Coordinate {
-        private final int x, y;
-
-        public Coordinate(final int x, final int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        @Override
-        public String toString() {
-            return "Coordinate [x=" + x + ", y=" + y + "]";
-        }
-
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + x;
-            result = prime * result + y;
-            return result;
-        }
-
-        @Override
-        public boolean equals(final Object obj) {
-            if (this == obj) {
-                return true;
-            }
-            if (obj == null) {
-                return false;
-            }
-            if (getClass() != obj.getClass()) {
-                return false;
-            }
-            Coordinate other = (Coordinate) obj;
-            if (x != other.x) {
-                return false;
-            }
-            if (y != other.y) {
-                return false;
-            }
-            return true;
-        }
-
-    }
 
     public static void main(final String[] args) {
         // String input = "flqrgnkx";
@@ -98,10 +55,10 @@ public class Day14 {
 
     private static void removedLinked(final Coordinate seed, final List<Coordinate> coordinates) {
         if (coordinates.remove(seed)) {
-            removedLinked(new Coordinate(seed.x + 1, seed.y), coordinates);
-            removedLinked(new Coordinate(seed.x, seed.y + 1), coordinates);
-            removedLinked(new Coordinate(seed.x, seed.y - 1), coordinates);
-            removedLinked(new Coordinate(seed.x - 1, seed.y), coordinates);
+            removedLinked(new Coordinate(seed.getX() + 1, seed.getY()), coordinates);
+            removedLinked(new Coordinate(seed.getX(), seed.getY() + 1), coordinates);
+            removedLinked(new Coordinate(seed.getX(), seed.getY() - 1), coordinates);
+            removedLinked(new Coordinate(seed.getX() - 1, seed.getY()), coordinates);
         }
     }
 }

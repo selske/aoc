@@ -1,14 +1,47 @@
 package aoc.fifteen;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
+import java.io.StringReader;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.ToIntFunction;
+import java.util.stream.Collectors;
 
 public class Day2 {
 
     public static void main(final String[] args) throws Exception {
         try (DataInputStream is = new DataInputStream(new ByteArrayInputStream(getInput().getBytes()));) {
+            Integer total = calculate(sizes -> {
+                        int x = sizes.get(0);
+                        int y = sizes.get(1);
+                        int z = sizes.get(2);
+                        return x * y + 2 * x * y + 2 * y * z + 2 * x * z;
+                    });
 
+            System.out.println(total);
+
+            Integer ribbonTotal = calculate(sizes -> {
+                int x = sizes.get(0);
+                int y = sizes.get(1);
+                int z = sizes.get(2);
+                return 2 * x + 2 * y + x * y * z;
+            });
+
+            System.out.println(ribbonTotal);
         }
+    }
+
+    private static Integer calculate(final ToIntFunction<List<Integer>> calculation) {
+        Integer ribbonTotal = new BufferedReader(new StringReader(getInput())).lines() //
+                .map(line -> line.split("x")) //
+                .map(tokens -> Arrays.stream(tokens) //
+                        .map(Integer::valueOf) //
+                        .sorted() //
+                        .collect(Collectors.toList())) //
+                .collect(Collectors.summingInt(calculation));
+        return ribbonTotal;
     }
 
     public static String getInput() {
