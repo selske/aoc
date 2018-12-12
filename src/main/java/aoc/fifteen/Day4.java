@@ -1,7 +1,5 @@
 package aoc.fifteen;
 
-import javax.xml.bind.DatatypeConverter;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -18,11 +16,11 @@ public class Day4 {
         MessageDigest digest = MessageDigest.getInstance("MD5");
         for (int i = 0;; i++) {
             byte[] md5hash = digest.digest((INPUT + i).getBytes());
-            String myHash = DatatypeConverter.printHexBinary(md5hash).toUpperCase();
-            if (myHash.startsWith(prefix)) {
-                System.out.println(myHash + ": " + i);
-                break;
-            }
+//            String myHash = DatatypeConverter.printHexBinary(md5hash).toUpperCase();
+//            if (myHash.startsWith(prefix)) {
+//                System.out.println(myHash + ": " + i);
+//                break;
+//            }
         }
     }
 
