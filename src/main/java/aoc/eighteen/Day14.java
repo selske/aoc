@@ -9,24 +9,21 @@ public class Day14 {
     public static void main(final String[] args) {
         long before = System.currentTimeMillis();
         System.out.println("part1: " + part1(846021));
-        System.out.println("part2: " + part2());
+        System.out.println("part2: " + part2("846021"));
         System.out.println("took: " + (System.currentTimeMillis() - before) + "ms");
     }
 
     private static String part1(int numberOfRecipes) {
-        Recipe elf1 = new Recipe(3);
-        Recipe elf2 = new Recipe(7);
-        elf1.insertRight(elf2);
+        Recipe first = new Recipe(3);
+        Recipe second = new Recipe(7);
+        first.insertRight(second);
 
-        Recipe[] elves = new Recipe[]{elf1, elf2};
+        Recipe[] elves = new Recipe[]{first, second};
 
-        final Recipe first = elf1;
-        Recipe last = elf2;
+        Recipe last = second;
 
         for (int i = 1; i < numberOfRecipes - elves.length + 10; i++) {
-            int score = Arrays.stream(elves).mapToInt(Recipe::getValue).sum();
-            List<Recipe> newRecipes = getNewRecipes(score);
-            for (final Recipe newRecipe : newRecipes) {
+            for (final Recipe newRecipe : getNewRecipes(elves)) {
                 last.insertRight(newRecipe);
                 last = newRecipe;
             }
@@ -34,7 +31,6 @@ public class Day14 {
                 Recipe elf = elves[j];
                 elves[j] = elf.moveRight(1 + elf.getValue());
             }
-
         }
         StringBuilder sb = new StringBuilder();
         Recipe current = first;
@@ -46,7 +42,8 @@ public class Day14 {
         return sb.substring(numberOfRecipes, numberOfRecipes + 10);
     }
 
-    private static List<Recipe> getNewRecipes(final int score) {
+    private static List<Recipe> getNewRecipes(final Recipe[] elves) {
+        int score = Arrays.stream(elves).mapToInt(Recipe::getValue).sum();
         List<Recipe> newRecipes = new ArrayList<>();
 
         int units = score % 10;
@@ -60,8 +57,43 @@ public class Day14 {
         return newRecipes;
     }
 
-    private static String part2() {
-        return null;
+    private static int part2(String pattern) {
+        Recipe first = new Recipe(3);
+        Recipe second = new Recipe(7);
+        first.insertRight(second);
+
+        Recipe[] elves = new Recipe[]{first, second};
+
+        Recipe last = second;
+
+        for (int i = elves.length; ; ) {
+            for (final Recipe newRecipe : getNewRecipes(elves)) {
+                last.insertRight(newRecipe);
+                last = newRecipe;
+
+                i++;
+                if (matchesPattern(pattern, last)) {
+                    return i - pattern.length();
+                }
+            }
+            for (int j = 0; j < elves.length; j++) {
+                Recipe elf = elves[j];
+                elves[j] = elf.moveRight(1 + elf.getValue());
+            }
+        }
+    }
+
+    private static boolean matchesPattern(final String pattern, final Recipe newRecipe) {
+        Recipe recipe = newRecipe;
+        final char[] charArray = pattern.toCharArray();
+        for (int charIndex = charArray.length - 1; charIndex >= 0; charIndex--) {
+            final int val = Character.getNumericValue(charArray[charIndex]);
+            if (val != recipe.value) {
+                return false;
+            }
+            recipe = recipe.getLeft();
+        }
+        return true;
     }
 
     private static final class Recipe {
@@ -76,12 +108,8 @@ public class Day14 {
             this.right = this;
         }
 
-        public Recipe getLeft() {
+        Recipe getLeft() {
             return left;
-        }
-
-        public Recipe getRight() {
-            return right;
         }
 
         public int getValue() {
@@ -95,11 +123,9 @@ public class Day14 {
             other.left = this;
         }
 
-        public Recipe moveRight(final int value) {
+        Recipe moveRight(final int value) {
             if (value == 0) {
                 return this;
-            } else if (value == 1) {
-                return right;
             } else {
                 return right.moveRight(value - 1);
             }
